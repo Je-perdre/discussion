@@ -5,6 +5,7 @@ import com.edu.shequ.dto.AccessTokenDTO;
 import com.edu.shequ.dto.GithubUser;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 
 
@@ -30,22 +31,14 @@ public class GithubProvider {
                 .url("https://github.com/login/oauth/access_token")
                 .post(body)
                 .build();
-        /*实现获取git用户信息access_token=4574e7e9c2c3b47772b84b6f8bbf5b10cabd7dbb&scope=user&token_type=bearer
-        try (Response response = client.newCall(request).execute()) {
-            String string = response.body().string();
-            System.out.println(string);
-            return string;
-         */
-        /*获取优化  获取：小谈在线*/
         try (Response response = client.newCall(request).execute()) {
             String string = response.body().string();
             return string.split("&")[0].split("=")[1];
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-
 
     public GithubUser getUser(String accessToken) {
         OkHttpClient client = new OkHttpClient();
@@ -57,7 +50,6 @@ public class GithubProvider {
             String string = response.body().string();
             return JSON.parseObject(string, GithubUser.class);
         } catch (IOException e) {
-            e.printStackTrace();
         }
         return null;
     }
